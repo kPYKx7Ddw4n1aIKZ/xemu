@@ -1405,7 +1405,9 @@ static MString* psh_convert(struct PixelShader *ps)
             if (ps->state->rect_tex[i]) {
                 mstring_append_fmt(preflight,
                 "vec2 norm%d(vec2 coord) {\n"
-                "    return coord / (textureSize(texSamp%d, 0) / texScale[%d]);\n"
+                "    vec2 texSize = textureSize(texSamp%d, 0);\n"
+                "    vec2 corrected = (coord - 0.5) * texScale[%d] + 0.5;\n"
+                "    return corrected / texSize;\n"
                 "}\n",
                 i, i, i);
                 mstring_append_fmt(preflight,
